@@ -5,15 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Despre mine - Cutoi Victor</title>
   <style>
-    /* --- General Reset --- */
-    * {margin:0; padding:0; box-sizing:border-box; font-family: Arial, Helvetica, sans-serif;}
+    /* --- Reset general --- */
+    * {margin:0; padding:0; box-sizing:border-box; font-family:Arial, Helvetica, sans-serif;}
     body {background:#0f0f10; color:#e6e6e6; scroll-behavior: smooth;}
 
-    /* --- Header / Nav --- */
+    /* --- Header / nav --- */
     header {
-      position: fixed; top:0; width:100%; background:#151518;
-      padding:15px 0; box-shadow:0 2px 10px rgba(0,0,0,0.6);
-      z-index:1000; display:flex; flex-direction:column; align-items:center;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: #151518;
+      padding: 15px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.3s ease; /* transform în loc de top pentru ascundere completă */
     }
     header h1 {margin-bottom:10px; font-size:28px;}
     nav ul {display:flex; list-style:none; gap:30px;}
@@ -31,8 +39,11 @@
 
     /* --- Sections --- */
     section {
-      min-height:100vh; padding:120px 10%;
-      opacity:0; transform:translateY(40px); transition:all 0.8s ease;
+      min-height:100vh;
+      padding:200px 10% 60px 10%; /* padding mare sus pentru header fix și mobil */
+      opacity:0;
+      transform:translateY(40px);
+      transition:all 0.8s ease;
     }
     section.visible {opacity:1; transform:translateY(0);}
     h2 {margin-bottom:20px; font-size:32px;}
@@ -64,7 +75,7 @@
     @media screen and (max-width: 768px) {
       header h1 {font-size:22px;}
       nav ul {flex-direction:column; gap:15px; text-align:center;}
-      section {padding:100px 5%;}
+      section {padding:160px 5% 60px 5%;}
       h2 {font-size:26px;}
       p, li {font-size:14px;}
       .timeline {padding-left:20px;}
@@ -76,7 +87,7 @@
       h2 {font-size:22px;}
       nav ul {gap:10px;}
       nav a {font-size:14px;}
-      section {padding:80px 5%;}
+      section {padding:140px 5% 60px 5%;}
     }
   </style>
 </head>
@@ -117,36 +128,42 @@
     <h2>My Journey</h2>
     <div class="timeline">
       <div class="timeline-item">
+        <div class="timeline-dot"></div>
         <div class="timeline-content">
           <h3>Early Years</h3>
           <p>At around the age of seven I started karting, which introduced me to motorsports, speed and technical precision from a young age.</p>
         </div>
       </div>
       <div class="timeline-item">
+        <div class="timeline-dot"></div>
         <div class="timeline-content">
           <h3>Competitive Sports</h3>
           <p>I spent eight years playing competitive football where I developed discipline, teamwork and determination.</p>
         </div>
       </div>
       <div class="timeline-item">
+        <div class="timeline-dot"></div>
         <div class="timeline-content">
           <h3>Aviation Experience</h3>
           <p>I also explored aviation through gliding, gaining a unique perspective on technology, aerodynamics and engineering.</p>
         </div>
       </div>
       <div class="timeline-item">
+        <div class="timeline-dot"></div>
         <div class="timeline-content">
           <h3>Education & Programming</h3>
           <p>After finishing high school and obtaining my Baccalaureate diploma, I chose to attend a private IT school instead of a traditional university to focus on practical programming skills, especially Python.</p>
         </div>
       </div>
       <div class="timeline-item">
+        <div class="timeline-dot"></div>
         <div class="timeline-content">
           <h3>Work Experience</h3>
           <p>I gained experience working as a barista, courier, sales agent, car preparation specialist and mechanic assistant. These roles helped me develop strong work discipline and adaptability.</p>
         </div>
       </div>
       <div class="timeline-item">
+        <div class="timeline-dot"></div>
         <div class="timeline-content">
           <h3>Today</h3>
           <p>Today I continue improving my technical knowledge while combining my interests in programming, technology and the automotive world.</p>
@@ -169,24 +186,22 @@
   </footer>
 
   <script>
-    // --- Scroll to Section ---
-    function scrollToSection(id){
-      document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    // Scroll la secțiune
+    function scrollToSection(id){ document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'}); }
 
-    // --- Section Fade-in ---
+    // Fade-in secțiuni
     const sections = document.querySelectorAll('section');
     const observer = new IntersectionObserver(entries=>{
       entries.forEach(entry=>{
         if(entry.isIntersecting){ entry.target.classList.add('visible'); }
       });
-    }, { threshold:0.2 });
+    }, {threshold:0.2});
     sections.forEach(section=>observer.observe(section));
 
-    // --- Highlight active menu link ---
+    // Highlight meniu activ
     const navLinks = document.querySelectorAll('nav a');
     function setActiveLink(){
-      let fromTop = window.scrollY + 100;
+      let fromTop = window.scrollY + 120;
       navLinks.forEach(link=>{
         const sectionId = link.getAttribute('onclick').match(/'(.+)'/)[1];
         const section = document.getElementById(sectionId);
@@ -198,13 +213,25 @@
     window.addEventListener('scroll', setActiveLink);
     setActiveLink();
 
-    // --- Back to Top Button ---
+    // Back to Top
     const backToTopBtn = document.getElementById('backToTop');
     window.addEventListener('scroll', ()=>{
-      if(window.scrollY > 300){ backToTopBtn.style.display = 'block'; }
-      else { backToTopBtn.style.display = 'none'; }
+      if(window.scrollY > 300){ backToTopBtn.style.display='block'; } 
+      else { backToTopBtn.style.display='none'; }
     });
-    function scrollToTop(){ window.scrollTo({ top:0, behavior:'smooth' }); }
+    function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+
+    // Ascunde/Arată header complet la scroll
+    let lastScrollY = window.scrollY;
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', ()=>{
+      if(window.scrollY > lastScrollY && window.scrollY > 100){
+        header.style.transform = 'translateY(-150px)'; // ascunde complet
+      } else {
+        header.style.transform = 'translateY(0)';
+      }
+      lastScrollY = window.scrollY;
+    });
   </script>
 
 </body>
